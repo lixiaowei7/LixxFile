@@ -28,7 +28,6 @@ class LixxDBF(LixxFile):
     """A model for reading and writing dbf files."""
 
     def __init__(self, path):
-        """@params: mode in ('rb', 'wb')"""
         super(LixxDBF, self).__init__(path)
         self.path = path
         
@@ -44,6 +43,7 @@ class LixxDBF(LixxFile):
         if path:
             try:
                 self.f = open(self.path, 'rb+')
+                self._read_header()
             except Exception as e:
                 self.f = open(self.path, 'wb+')
 
