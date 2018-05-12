@@ -14,12 +14,19 @@
     ['name', 'title']
     >>> dbf.fieldspecs
     [('C', 16, 0), ('C', 16, 0)]
-    >>> dbf._read_records()
+    >>> dbf.lixx_read()
     [[b'Xiaowei Li      ', b'Archon          '], [b'Xixiang Zhu     ', b'CAO             ']]
+    >>> dbf.lixx_get(1, 1)
+    b'CAO
+    >>> dbf.lixx_set(0, 1, 'X')
+    'X'
     >>> dbf
+    Xiaowei Li, X
+    Xixiang Zhu, CAO
+    
+    >>> repr(dbf)
+    'Xiaowei Li, X\nXixiang Zhu, CAO\n'
+    >>> print(dbf)
+    Path: E:/GPL/xx.dbf
     Fieldnames: ['name', 'title']
     Fieldspecs: [('C', 16, 0), ('C', 16, 0)]
-    >>> print(repr(dbf))
-    Xiaowei Li, Archon
-    Xixiang Zhu, CAO
-
