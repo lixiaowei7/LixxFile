@@ -27,6 +27,6 @@
     >>> repr(dbf)
     'Xiaowei Li, X\nXixiang Zhu, CAO\n'
     >>> print(dbf)
-    Path: E:/GPL/xx.dbf
+    Path: xx.dbf
     Fieldnames: ['name', 'title']
     Fieldspecs: [('C', 16, 0), ('C', 16, 0)]
