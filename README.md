@@ -5,7 +5,7 @@
     >>> dbf = LixxDBF('xx.dbf')
     >>> fieldnames = ['name', 'title']
     >>> fieldspecs = [('C', 16, 0), ('C', 16, 0)]
-    >>> records = [["Xiaowei Li", "Archon"], ["Xixiang Zhu", "CAO"]]
+    >>> records = [["Xiaowei Li", "Archon"], ["Xixiang Zhu", "Shuai"]]
     >>> dbf.lixx_write(fieldnames, fieldspecs, records)
 
 ### DBF_Read
@@ -15,17 +15,17 @@
     >>> dbf.fieldspecs
     [('C', 16, 0), ('C', 16, 0)]
     >>> dbf.lixx_read()
-    [[b'Xiaowei Li      ', b'Archon          '], [b'Xixiang Zhu     ', b'CAO             ']]
+    [[b'Xiaowei Li      ', b'Archon          '], [b'Xixiang Zhu     ', b'Shuai             ']]
     >>> dbf.lixx_get(1, 1)
-    b'CAO
+    b'Shuai
     >>> dbf.lixx_set(0, 1, 'X')
     'X'
     >>> dbf
     Xiaowei Li, X
-    Xixiang Zhu, CAO
+    Xixiang Zhu, Shuai
     
     >>> repr(dbf)
-    'Xiaowei Li, X\nXixiang Zhu, CAO\n'
+    'Xiaowei Li, X\nXixiang Zhu, Shuai\n'
     >>> print(dbf)
     Path: xx.dbf
     Fieldnames: ['name', 'title']
