@@ -27,10 +27,11 @@ from Lixx_file import LixxFile
 class LixxDBF(LixxFile):
     """A model for reading and writing dbf files."""
 
-    def __init__(self, path):
+    def __init__(self, path, enable_gbk=True):
         """@params: mode in ('rb', 'wb')"""
         super(LixxDBF, self).__init__(path)
         self.path = path
+        self.enable_gbk = enable_gbk
         
         self.f = None
         self.fields = []
@@ -44,9 +45,10 @@ class LixxDBF(LixxFile):
         if path:
             try:
                 self.f = open(self.path, 'rb+')
+                self._read_header()
             except Exception as e:
                 self.f = open(self.path, 'wb+')
-
+        
     def __del__(self):
         self._close()
     
@@ -70,6 +72,12 @@ class LixxDBF(LixxFile):
         if self.f:
             self.f.close()
         self.f = None
+
+    def __getitem__(self, row, col=None):
+        return self.lixx_get(row, col)
+    
+    def __setitem__(self, row, col, val):
+        return self.lixx_set(self, row, col, val)
 
     def _read(self, f, offset):
         self.offset += offset
@@ -98,18 +106,18 @@ class LixxDBF(LixxFile):
         return self.fieldnames, self.fieldspecs
 
     def _read_records(self):
-        records = self.records
-        if records:
-            return records
-
-        f = self.f
-        fields = self.fields
-        numrec = self.numrec
-        records = self.records
+        if self.records:
+            return self.records
 
         if not (self.fieldnames or self.fieldspecs):
             self._read_header()
         
+        f = self.f
+        fields = self.fields
+        numrec = self.numrec
+        records = self.records
+        records = self.records
+
         terminator = self._read(f, 1)
         terminator=terminator.decode('utf-8')
         assert terminator == '\r'
@@ -169,13 +177,16 @@ class LixxDBF(LixxFile):
                     value = str(value)[0].upper()
                     value = value.encode('utf-8')
                 else:
-                    value = str(value)[:size].ljust(size, ' ')
-
-                    # support chinese encoding GBK
-                    if len(value) != len(value.encode("GBK")):
-                        value = value.encode("GBK")[:size]
+                    if self.enable_gbk:
+                        # support chinese encoding GBK
+                        value = str(value)[:size].ljust(size, ' ')
+                        if len(value) != len(value.encode("GBK")):
+                            value = value.encode("GBK")[:size]
+                        else:
+                            value = value.encode('utf-8')
                     else:
                         value = value.encode('utf-8')
+                        value = value + b' ' * (size - len(value))
 
                 assert len(value) == size
                 f.write(value)
@@ -212,8 +223,11 @@ class LixxDBF(LixxFile):
     def lixx_get(self, row, col=None):
         if not self.records:
             self._read_records()
-
-        return self.records[row][col]
+        
+        if col != None:
+            return self.records[row][col]
+        else:
+            return self.records[row]
     
     def lixx_set(self, row, col, val):
         records = self.records
@@ -231,4 +245,3 @@ class LixxDBF(LixxFile):
 
 if __name__ == '__main__':
     pass
-
