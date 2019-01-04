@@ -17,11 +17,11 @@
 # @Email: Xiaowei Li<lixiaowei7@live.cn>
 # @Email: Xixiang Zhu<hixxzhu@gmail.com>
 
-class LixxFile():
+class LixxFile:
     """a base class model for reading and writing uncommon files."""
 
-    def __init__(self, path):
-        pass
+    def __init__(self, path, mode="rb"):
+        self.fp = open(path, mode)
 
     def __del__(self):
         pass
@@ -45,5 +45,10 @@ class LixxFile():
         """header info, size, type, etc."""
         pass
 
-if __name__ == '__main__':
-    pass
+    def _read(self, offset):
+        fp = self.fp
+        return fp.read(offset)
+
+    def seek(self, offset, whence=0):
+        """0-head, 1-now, 2-tail"""
+        self.fp.seek(offset, whence)

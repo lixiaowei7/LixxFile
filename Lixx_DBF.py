@@ -29,7 +29,6 @@ class LixxDBF(LixxFile):
 
     def __init__(self, path, enable_gbk=True):
         """@params: mode in ('rb', 'wb')"""
-        super(LixxDBF, self).__init__(path)
         self.path = path
         self.enable_gbk = enable_gbk
         
