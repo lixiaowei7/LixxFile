@@ -240,8 +240,6 @@ class LixxTIF(LixxFile):
         byte_order = self.byte_order
 
         pointer = pointers[h][w]
-        # print()
-        # print("setPixel:", h, w, pointer)
         fp.seek(pointer)
 
         fmt = byte_order == "little" and "<h" or ">h"
@@ -249,3 +247,23 @@ class LixxTIF(LixxFile):
         fp.write(val)
 
         self.sign = True
+
+    def getPixel(self, h, w):
+        """get pixel by file pointer withnot an array"""
+
+        fp = self.fp
+        strips = self._strips()
+        width, height = self.scale()
+        rowsPerStrip = self[278]["valueOrOffset"]
+        int_from_bytes = self.int_from_bytes
+
+        assert w >=0 and w < width
+        assert h >= 0 and h < height
+
+        strip = strips[h // rowsPerStrip]
+        offset = strip["offsets"] + width * (h % rowsPerStrip) * 2 + w * 2
+        fp.seek(offset)
+
+        pixel = int_from_bytes(fp.read(2))
+        return np.int16(pixel)
+        
